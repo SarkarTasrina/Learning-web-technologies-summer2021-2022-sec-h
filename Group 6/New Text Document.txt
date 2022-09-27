@@ -1,0 +1,78 @@
+clc
+clear all
+close all
+A= 2;
+B=0;
+C=4;
+D=2;
+E=6;
+F=2;
+G=2;
+H=1;
+fs=10000;
+t=0:1/fs:6;
+a1=3;
+a2=5;
+a3=9;
+a4=7;
+f1=7;
+f2=9;
+f3=11;
+f4=13;
+x1 = a1*cos(2*pi*f1*t); 
+x2 = a2*sin(2*pi*f2*t);
+x3 = a3*cos(2*pi*f3*t);
+x4 = a4*cos(2*pi*f4*t);
+signal_x = x1 + x2 + x3+ x4;
+subplot(2,1,1)
+plot(t,signal_x,'Linewidth',1);
+xlabel('Time')
+ylabel('Amplitude')
+title('Time Domain') 
+
+fx = abs(fftshift(fft(signal_x))) / ( length(signal_x)/2); 
+freq = linspace(-fs/2 , fs/2, length(signal_x));
+subplot(2,1,2)
+bar(freq,fx,'Linewidth',1)
+xlim([-18, +18])
+xlabel('Frequency')
+ylabel('Amplitude')
+title('Frequency Domain')
+
+%noise
+     sd = 15;
+     noise = sd*randn(size(signal_x)); % noise power = sd^15
+     figure
+     subplot(2,1,1)
+     plot(t,noise, 'linewidth', 1)
+     xlabel('Time (s)');
+     ylabel('Amplitude');
+     title('Time-Domain Representation of Noise');
+     fftNoise = fft(noise);
+     fftNoise = fftshift(fftNoise)/(length(signal_x)/2);
+     
+     subplot(2,1,2)
+     %noisy signal
+     bar(freq,abs(fftNoise), 'linewidth', 2)
+     title('Frequency-Domain Representation of Noise');
+     xlabel('Frequency (Hz)');
+     ylabel('Amplitude');
+     xlim([-18,+18])
+     noisySignal = signal_x + noise;
+     
+     figure
+     
+     subplot(2,1,1)
+     plot(t,noisySignal, 'linewidth', 1)
+     xlabel('Time (s)');
+     ylabel('Amplitude');
+     title('Time-Domain Representation of Noisy Signal');
+     fftNoisySignal = fft(noisySignal);
+     fftNoisySignal = fftshift(fftNoisySignal)/(length(signal_x)/2);
+     
+     subplot(2,1,2)
+     bar(freq,abs(fftNoisySignal), 'linewidth', 2)
+     title('Frequency-Domain Representation of Noisy Signal');
+     xlabel('Frequency (Hz)');
+     ylabel('Amplitude');
+     xlim([-18 ,+18])
